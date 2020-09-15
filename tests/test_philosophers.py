@@ -57,6 +57,7 @@ class TestPhilosopherThinkingState:
 
         philosopher.left_neighbor = left_neighbor
 
+
         philosopher.request_fork()
 
     def test_verify_if_have_any_saved_requests_should_fulfill_the_requests(
@@ -85,6 +86,9 @@ class TestPhilosopherHungryState:
     def test_receive_request_from_some_neighbor_with_a_clean_fork_should_save_this_request_and_not_send(  # noqa
         self,
     ):
+        ...
+
+    def test_receive_a_fork_should_try_to_eat(self):
         ...
 
 
