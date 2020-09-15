@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from dinning_philosophers.constants import ForkState
+from dining_philosophers.constants import ForkState
 
 
 @dataclass

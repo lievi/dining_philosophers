@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "dinning_philosophers"
+name = "dining_philosophers"
 version = "0.1.0"
 description = ""
 authors = ["Lievi Silva <lievi.silva@luizalabs.com>"]

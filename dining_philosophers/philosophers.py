@@ -2,8 +2,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List
 
-from dinning_philosophers.constants import PhilosopherState
-from dinning_philosophers.forks import Fork
+from dining_philosophers.constants import PhilosopherState
+from dining_philosophers.forks import Fork
 
 
 @dataclass

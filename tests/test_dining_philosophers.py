@@ -1,4 +1,4 @@
-from dinning_philosophers import __version__
+from dining_philosophers import __version__
 
 
 def test_version():

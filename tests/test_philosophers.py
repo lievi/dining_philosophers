@@ -1,9 +1,9 @@
-from dinning_philosophers.forks import Fork
+from dining_philosophers.forks import Fork
 import pytest
 
-from dinning_philosophers.constants import PhilosopherState
-from dinning_philosophers.exceptions import PhilosopherWithSameIdException
-from dinning_philosophers.philosophers import Philosopher
+from dining_philosophers.constants import PhilosopherState
+from dining_philosophers.exceptions import PhilosopherWithSameIdException
+from dining_philosophers.philosophers import Philosopher
 
 
 class TestPhilosophersInitialization:
@@ -16,19 +16,19 @@ class TestPhilosophersInitialization:
         assert philosopher.state == PhilosopherState.THINKING
         assert len(philosopher.fork) == 0
 
-    # TODO: set this on the dinning table class
+    # TODO: set this on the dining table class
     # def test_create_philosopher_with_same_id_should_raise(self):
     #     Philosopher(0)
     #     with pytest.raises(PhilosopherWithSameIdException):
     #         Philosopher(0)
 
-    # TODO: set this on the dinning table class
+    # TODO: set this on the dining table class
     # def test_assign_a_fork_to_a_philosopher_with_the_lowest_id_should_assing_a_fork(  # noqa
     #     self,
     # ):
     #     ...
 
-    # TODO: set this on the dinning table class
+    # TODO: set this on the dining table class
     # def test_assign_a_fork_to_a_philosopher_in_wich_its_neighbor_already_have_one_fork_should_not_assing(  # noqa
     #     self,
     # ):
