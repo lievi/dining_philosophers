@@ -1,9 +1,10 @@
 from dining_philosophers.forks import Fork
 import pytest
 
-from dining_philosophers.constants import PhilosopherState
+from dining_philosophers.constants import ForkState, PhilosopherState
 from dining_philosophers.exceptions import PhilosopherWithSameIdException
 from dining_philosophers.philosophers import Philosopher
+from dining_philosophers.forks import Fork
 
 
 class TestPhilosophersInitialization:
@@ -14,7 +15,6 @@ class TestPhilosophersInitialization:
 
         assert philosopher.id == ID
         assert philosopher.state == PhilosopherState.THINKING
-        assert len(philosopher.fork) == 0
 
     # TODO: set this on the dining table class
     # def test_create_philosopher_with_same_id_should_raise(self):
@@ -34,17 +34,17 @@ class TestPhilosophersInitialization:
     # ):
     #     ...
 
-    def test_assign_fork_to_a_philosopher_should_only_be_able_to_assign_two_forks(  # noqa
-        self,
-    ):
-        forks = (Fork() for _ in range(3))
+    # def test_assign_fork_to_a_philosopher_should_only_be_able_to_assign_two_forks(  # noqa
+    #     self,
+    # ):
+    #     forks = (Fork() for _ in range(3))
 
-        philosopher = Philosopher(0)
+    #     philosopher = Philosopher(0)
 
-        for fork in forks:
-            philosopher.fork = fork
+    #     for fork in forks:
+    #         philosopher.fork = fork
 
-        assert len(philosopher.fork) == 2
+    #     assert len(philosopher.fork) == 2
 
 
 class TestPhilosopherThinkingState:
@@ -52,13 +52,24 @@ class TestPhilosopherThinkingState:
     def test_philosopher_with_dirty_forks_receives_a_request_from_neighbor_should_clean_it_and_send_a_fork(  # noqa
         self,
     ):
+
+        fork = Fork()
+
         philosopher = Philosopher(0)
-        left_neighbor = Philosopher(1)
+        neighbor = Philosopher(1)
 
-        philosopher.left_neighbor = left_neighbor
+        # Both philosophers have the same fork in common, so they're neighbors
+        philosopher.fork.append(fork)
+        neighbor.fork.append(fork)
 
+        # The current owner is a philosopher
+        fork.current_owner = philosopher
 
-        philosopher.request_fork()
+        philosopher.receive_request(neighbor, fork)
+
+        assert philosopher.state == PhilosopherState.THINKING
+        assert fork.current_owner == neighbor
+        assert fork.state == ForkState.CLEAN
 
     def test_verify_if_have_any_saved_requests_should_fulfill_the_requests(
         self,
