@@ -1,10 +1,9 @@
 from dataclasses import dataclass, field
+from asyncio import Lock
 
-from dining_philosophers.constants import ForkState
-from dining_philosophers import philosophers
+# from dining_philosophers.constants import ForkState
 
 
 @dataclass
 class Fork:
-    state: ForkState = field(init=False, default=ForkState.DIRTY)
-    current_owner: philosophers.Philosopher = field(init=False)
+    lock: Lock = field(init=False, default_factory=Lock)

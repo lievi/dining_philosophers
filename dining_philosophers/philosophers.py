@@ -1,10 +1,12 @@
 from __future__ import annotations
+import asyncio
 from dataclasses import dataclass, field
+import time
 from typing import List
 
-from dining_philosophers.constants import ForkState, PhilosopherState
+from constants import ForkState, PhilosopherState
 # TODO: Adjust this circular import
-from dining_philosophers import forks
+from forks import Fork
 
 
 @dataclass
@@ -16,7 +18,7 @@ class Philosopher:
     state: PhilosopherState = field(
         init=False, default=PhilosopherState.THINKING
     )
-    fork: List[forks.Fork] = field(init=False, default_factory=list)
+    forks: List[Fork] = field(init=False, default_factory=list)
 
     # @property
     # def fork(self) -> List[forks.Fork]:
@@ -27,22 +29,8 @@ class Philosopher:
     #     if len(self._forks) < 2:
     #         self._forks.append(fork)
 
-    def request_fork(self):
-        # Verify if i had some dirty fork
-        #
-        ...
-
-    def receive_request(self, neighbor: Philosopher, fork: forks.Fork) -> None:
-        if self.state == PhilosopherState.THINKING:
-            fork.state = ForkState.CLEAN
-            fork.current_owner = neighbor
-
-        if self.state == PhilosopherState.HUNGRY:
-            if fork.state == ForkState.CLEAN:
-                # Put in some queue
-                ...
-            fork.state = ForkState.CLEAN
-            fork.current_owner = neighbor
-
-    def eat(self):
-        ...
+    async def eat(self):
+        async with self.forks[0].lock, self.forks[1].lock:
+            print(f'{self.id} get\'s both of the forks, starting to eat')
+            asyncio.sleep(3)
+            print(f'{self.id} done eating')
