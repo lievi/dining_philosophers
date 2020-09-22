@@ -1,36 +1,56 @@
 from __future__ import annotations
-import asyncio
 from dataclasses import dataclass, field
 import time
-from typing import List
+import threading
+from typing import Dict
 
 from constants import ForkState, PhilosopherState
 # TODO: Adjust this circular import
 from forks import Fork
 
 
-@dataclass
-class Philosopher:
-    id: int
-    # TODO: Verify if make sense put only a list of neighbors
-    # left_neighbor: Philosopher = field(init=False)
-    # right_neighbor: Philosopher = field(init=False)
-    state: PhilosopherState = field(
-        init=False, default=PhilosopherState.THINKING
-    )
-    forks: List[Fork] = field(init=False, default_factory=list)
+class Philosopher(threading.Thread):
+    def __init__(self, id) -> None:
+        threading.Thread.__init__(self)
+        self.id = id
+        self.state = PhilosopherState.THINKING
+        self.forks = Dict[int, Fork]
 
-    # @property
-    # def fork(self) -> List[forks.Fork]:
-    #     return self._forks
+    def run(self):
+        self.eat()
 
-    # @fork.setter
-    # def fork(self, fork: forks.Fork) -> None:
-    #     if len(self._forks) < 2:
-    #         self._forks.append(fork)
+    def eat(self):
+        fork_with_lowest_id = self.forks[min(self.forks.keys())]
+        fork_with_highest_id = self.forks[max(self.forks.keys())]
 
-    async def eat(self):
-        async with self.forks[0].lock, self.forks[1].lock:
-            print(f'{self.id} get\'s both of the forks, starting to eat')
-            asyncio.sleep(3)
-            print(f'{self.id} done eating')
+        print(
+            f'Philo. {self.id} trying to '
+            f'acquire the fork with lowest id: {fork_with_lowest_id.id}\n'
+        )
+        try:
+            fork_with_lowest_id.lock.acquire()
+            print(
+                f'Philo. {self.id} '
+                f'acquired the fork id: {fork_with_lowest_id.id}\n'
+            )
+        except Exception as e:
+            print(e)
+
+        print(
+            f'Philo. {self.id} trying to '
+            f'acquire the fork with highest id: {fork_with_highest_id.id}\n'
+        )
+        try:
+            fork_with_highest_id.lock.acquire()
+            print(
+                f'Philo. {self.id} '
+                f'acquired the fork id: {fork_with_highest_id.id}\n'
+            )
+        except Exception as e:
+            print(e)
+
+        print(f'The Philo. {self.id} is eating\n')
+        time.sleep(5)
+        print(f'The Philo. {self.id} finished eating\n')
+        fork_with_lowest_id.lock.release()
+        fork_with_highest_id.lock.release()
