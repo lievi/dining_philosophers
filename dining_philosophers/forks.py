@@ -20,3 +20,6 @@ class Fork:
 
     def request(self, philosopher: Philosopher):
         ...
+
+    def done(self):
+        ...

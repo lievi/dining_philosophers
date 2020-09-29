@@ -1,6 +1,5 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-import time
 import threading
 from typing import List
 
@@ -20,4 +19,7 @@ class Philosopher(threading.Thread):
         self.eat()
 
     def eat(self):
+        ...
+
+    def think(self):
         ...

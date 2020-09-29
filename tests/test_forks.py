@@ -10,8 +10,21 @@ class TestForks:
 
         assert fork.state == ForkState.DIRTY
 
-    # def test_receive_a_
-
-    # FIXME: i guess that this should be on the main tests
-    def test_create_a_fork_for_every_pair_of_philosopher_on_the_table(self):
+    def test_receive_request_with_same_owner_should_do_nothing(self):
         ...
+
+    def test_receive_request_from_some_neighbor_with_dirty_state_should_clean_it_and_change_owner( # noqa
+        self
+    ):
+        ...
+
+    def test_receive_request_from_both_neighbors_should_lock_for_the_first_requester( # noqa
+        self
+    ):
+        ...
+
+    def test_receive_request_from_some_neighbor_with_clean_state_should_wait_until_the_owner_is_done( # noqa
+        self
+    ):
+        ...
+

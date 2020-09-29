@@ -1,0 +1,6 @@
+class TestTable:
+    def test_create_a_fork_for_every_pair_of_philosopher_on_the_table(self):
+        ...
+
+    def test_create_philosopher_with_same_id_should_raise(self):
+        ...
