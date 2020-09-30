@@ -1,42 +1,74 @@
-from dining_philosophers.forks import Fork
 import pytest
+import mock
 
-from dining_philosophers.constants import ForkState, PhilosopherState
-from dining_philosophers.exceptions import PhilosopherWithSameIdException
+from dining_philosophers.constants import PhilosopherState
+from dining_philosophers.exceptions import (
+    PhilosopherWithMoreThanTwoForksException,
+)
 from dining_philosophers.philosophers import Philosopher
 from dining_philosophers.forks import Fork
 
 
-class TestPhilosophersInitialization:
+class TestPhilosophers:
     def test_create_philosopher(self):
         ID = 0
 
-        philosopher = Philosopher(ID)
+        left_fork = Fork()
+        right_fork = Fork()
+
+        philosopher = Philosopher(ID, (left_fork, right_fork))
 
         assert philosopher.id == ID
         assert philosopher.state == PhilosopherState.THINKING
 
-    # def test_assign_fork_to_a_philosopher_should_only_be_able_to_assign_two_forks(  # noqa
-    #     self,
-    # ):
-    #     forks = (Fork() for _ in range(3))
+    def test_run_philosopher_thread(self):
+        ID = 0
 
-    #     philosopher = Philosopher(0)
+        left_fork = Fork()
+        right_fork = Fork()
 
-    #     for fork in forks:
-    #         philosopher.fork = fork
+        philosopher = Philosopher(ID, (left_fork, right_fork))
 
-    #     assert len(philosopher.fork) == 2
+        philosopher.start()
 
-    def test_eat_as_owner_of_both_forks_should_set_state_to_eat(self):
-        ...
-
-    def test_eat_with_missing_ownership_of_forks_should_request_to_both_neighbors( # noqa
-        self
+    def test_assign_fork_to_a_philosopher_should_only_be_able_to_assign_two_forks(  # noqa
+        self,
     ):
-        ...
+        forks = [Fork() for _ in range(3)]
 
-    def test_think_should_set_state_to_thinking_and_set_the_fork_state_to_dirty( # noqa
-        self
+        with pytest.raises(PhilosopherWithMoreThanTwoForksException):
+            Philosopher(0, forks)
+
+    def test_eat_as_owner_of_both_forks_should_set_state_to_eat(
+        self, philosopher: Philosopher
     ):
-        ...
+        assert philosopher.state == PhilosopherState.THINKING
+
+        for fork in philosopher.forks:
+            fork._owner = philosopher
+
+        philosopher.eat()
+
+        assert philosopher.state == PhilosopherState.EATING
+
+    def test_eat_with_missing_ownership_of_forks_should_request_to_both_neighbors(  # noqa
+        self, philosopher: Philosopher
+    ):
+        with mock.patch("dining_philosophers.forks.Fork.request"):
+            philosopher.eat()
+
+            for fork in philosopher.forks:
+                fork.request.assert_called_with(philosopher)
+
+    def test_think_should_set_state_to_thinking_and_done_eating_with_the_forks(  # noqa
+        self, philosopher: Philosopher
+    ):
+        philosopher.state = PhilosopherState.EATING
+
+        with mock.patch("dining_philosophers.forks.Fork.done"):
+            philosopher.think()
+
+            for fork in philosopher.forks:
+                assert fork.done.called
+
+        assert philosopher.state == PhilosopherState.THINKING

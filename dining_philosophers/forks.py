@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from threading import Lock, Condition
 from typing import TYPE_CHECKING
 
-from constants import ForkState
+from dining_philosophers.constants import ForkState
 
 # The Philosopher class is just imported for type hinting
 # I'm importing in that way to avoid cyclic import
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 @dataclass
 class Fork:
-    owner: Philosopher
+    _owner: Philosopher = field(init=False)
     state: ForkState = field(init=False, default=ForkState.DIRTY)
     lock: Lock = field(init=False, default_factory=Lock)
     condition: Condition = field(init=False, default_factory=Condition)

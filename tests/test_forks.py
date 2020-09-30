@@ -1,12 +1,10 @@
 from dining_philosophers.constants import ForkState
 from dining_philosophers.forks import Fork
-from dining_philosophers.philosophers import Philosopher, PhilosopherState
 
 
 class TestForks:
     def test_create_fork_should_initiate_with_the_dirty_state(self):
-        current_owner = Philosopher(0)
-        fork = Fork(current_owner)
+        fork = Fork()
 
         assert fork.state == ForkState.DIRTY
 
@@ -27,4 +25,3 @@ class TestForks:
         self
     ):
         ...
-

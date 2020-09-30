@@ -1,0 +1,5 @@
+[run]
+include = dining_philosophers/*
+
+[report]
+show_missing = True

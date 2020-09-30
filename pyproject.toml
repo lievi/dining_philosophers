@@ -6,6 +6,8 @@ authors = ["Lievi Silva <lievi.silva@luizalabs.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+mock = "^4.0.2"
+coverage = "^5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
