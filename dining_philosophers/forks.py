@@ -19,7 +19,20 @@ class Fork:
     condition: Condition = field(init=False, default_factory=Condition)
 
     def request(self, philosopher: Philosopher):
-        ...
+        if self._owner == philosopher:
+            print(f'The philosopher {philosopher} is already the owner')
+        if self.state is ForkState.DIRTY:
+            self.lock.acquire()
+            self.state = ForkState.CLEAN
+            self._owner = philosopher
+            self.lock.release()
+
+        if self.state is ForkState.CLEAN:
+            with self.condition:
+                self.condition.wait()
 
     def done(self):
-        ...
+        self.state = ForkState.DIRTY
+
+        with self.condition:
+            self.condition.notify_all()
