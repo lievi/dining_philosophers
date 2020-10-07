@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 from dataclasses import dataclass, field
 from threading import Lock, Condition
 from typing import TYPE_CHECKING
@@ -9,6 +10,8 @@ from dining_philosophers.constants import ForkState
 # I'm importing in that way to avoid cyclic import
 if TYPE_CHECKING:
     from philosophers import Philosopher
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -21,49 +24,45 @@ class Fork:
 
     def request(self, philosopher: Philosopher):
         if self._owner == philosopher:
-            # TODO: Improve this set state with lock
-            self.lock.acquire()
-            print(
-                f'{philosopher} is already the owner of {self}, clean it'
-            )
-            self.state = ForkState.CLEAN
-            self.lock.release()
-            return
+            with self.lock:
+                logger.info(
+                    f'{philosopher} is already the owner of {self}, clean it'
+                )
+                self.state = ForkState.CLEAN
+                return
 
         if self.state is ForkState.DIRTY:
-            self.lock.acquire()
-            print(
+            with self.lock:
+                logger.info(
                     f'{philosopher} getting the dirty {self} from '
                     f'{self._owner}, and clean it'
                 )
-            self.state = ForkState.CLEAN
-            self._owner = philosopher
-            self.lock.release()
+                self.state = ForkState.CLEAN
+                self._owner = philosopher
             return
 
         if self.state is ForkState.CLEAN:
             with self.condition:
-                print(
+                logger.info(
                     f'{philosopher} is waiting the {self._owner} '
                     f'finish using the {self}'
                 )
                 self.condition.wait()
 
-                self.lock.acquire()
-                print(
-                    f'{philosopher} getting ownership the {self} and clean it'
-                )
-                self._owner = philosopher
-                self.state = ForkState.CLEAN
-                self.lock.release()
+                with self.lock:
+                    logger.info(
+                        f'{philosopher} getting ownership of '
+                        f'{self} and clean it'
+                    )
+                    self._owner = philosopher
+                    self.state = ForkState.CLEAN
 
     def done(self):
-        self.state = ForkState.DIRTY
+        with self.lock:
+            self.state = ForkState.DIRTY
 
         with self.condition:
-            self.lock.acquire()
             self.condition.notify_all()
-            self.lock.release()
 
     def __repr__(self) -> str:
         return f'Fork {self.id}'

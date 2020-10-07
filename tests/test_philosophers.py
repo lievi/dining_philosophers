@@ -1,10 +1,6 @@
-import pytest
 import mock
 
 from dining_philosophers.constants import PhilosopherState
-from dining_philosophers.exceptions import (
-    PhilosopherWithMoreThanTwoForksException,
-)
 from dining_philosophers.philosophers import Philosopher
 from dining_philosophers.forks import Fork
 
@@ -13,8 +9,8 @@ class TestPhilosophers:
     def test_create_philosopher(self):
         ID = 0
 
-        left_fork = Fork()
-        right_fork = Fork()
+        left_fork = Fork(0)
+        right_fork = Fork(1)
 
         philosopher = Philosopher(ID, (left_fork, right_fork))
 
@@ -24,20 +20,12 @@ class TestPhilosophers:
     def test_run_philosopher_thread(self):
         ID = 0
 
-        left_fork = Fork()
-        right_fork = Fork()
+        left_fork = Fork(0)
+        right_fork = Fork(1)
 
         philosopher = Philosopher(ID, (left_fork, right_fork))
 
         philosopher.start()
-
-    def test_assign_fork_to_a_philosopher_should_only_be_able_to_assign_two_forks(  # noqa
-        self,
-    ):
-        forks = [Fork() for _ in range(3)]
-
-        with pytest.raises(PhilosopherWithMoreThanTwoForksException):
-            Philosopher(0, forks)
 
     def test_eat_as_owner_of_both_forks_should_set_state_to_eat(
         self, philosopher: Philosopher

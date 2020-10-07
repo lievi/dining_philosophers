@@ -7,7 +7,7 @@ from dining_philosophers.philosophers import Philosopher
 
 class TestForks:
     def test_create_fork_should_initiate_with_the_dirty_state(self):
-        fork = Fork()
+        fork = Fork(0)
 
         assert fork.state == ForkState.DIRTY
 
@@ -23,7 +23,7 @@ class TestForks:
     def test_receive_request_from_some_neighbor_with_dirty_state_should_clean_it_and_change_owner( # noqa
         self, fork: Fork, philosopher: Philosopher
     ):
-        another_fork = Fork()
+        another_fork = Fork(1)
         another_philosopher = Philosopher(1, (fork, another_fork))
 
         fork._owner = another_philosopher
@@ -41,7 +41,7 @@ class TestForks:
     def test_receive_request_from_some_neighbor_with_clean_state_should_wait_until_the_owner_is_done( # noqa
         self, fork: Fork, philosopher: Philosopher
     ):
-        another_fork = Fork()
+        another_fork = Fork(1)
         another_philosopher = Philosopher(1, (fork, another_fork))
 
         fork.state = ForkState.CLEAN

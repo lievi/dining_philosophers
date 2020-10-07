@@ -6,16 +6,12 @@ from dining_philosophers.philosophers import Philosopher
 
 @pytest.fixture
 def fork():
-    return _fork_factory()
+    return Fork(0)
 
 
 @pytest.fixture
 def philosopher():
-    left_fork = _fork_factory()
-    right_fork = _fork_factory()
+    left_fork = Fork(0)
+    right_fork = Fork(1)
 
     return Philosopher(0, [left_fork, right_fork])
-
-
-def _fork_factory() -> Fork:
-    return Fork()

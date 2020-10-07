@@ -1,18 +1,19 @@
+import logging
 from typing import List
 
 from dining_philosophers.philosophers import Philosopher
 from dining_philosophers.forks import Fork
+
+logger = logging.getLogger(__name__)
+
 
 class Table:
     """Class that prepare the philosophers and the forks in a correct way
     """
     PHILOSOPHERS_ON_TABLE = 5
 
-    def __init__(self) -> None:
-        ...
-
     def start_dinning(self):
-        print(
+        logger.info(
             f'Starting the dinner with {self.PHILOSOPHERS_ON_TABLE} '
             'philosophers'
         )

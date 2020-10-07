@@ -1,4 +1,9 @@
+import logging
 from dining_philosophers.table import Table
+
+logging.basicConfig(
+    level=logging.INFO, format='%(asctime)s %(message)s'
+)
 
 
 def main():
