@@ -1,3 +1,5 @@
+import logging
+
 import mock
 
 from dining_philosophers.constants import PhilosopherState
@@ -27,8 +29,40 @@ class TestPhilosophers:
 
         philosopher.start()
 
+    def test_run_philosopher_thread_with_philosopher_already_full_should_log_and_return( # noqa
+        self, philosopher: Philosopher, caplog
+    ):
+        expected_log = f'{str(philosopher)} is full'
+        philosopher.full = 3
+
+        with caplog.at_level(logging.INFO):
+            philosopher.run()
+
+        caplog.records
+
+        log_messages = [log.message for log in caplog.records]
+        assert expected_log in log_messages
+
+    def test_run_philosopher_thread_with_philosopher_should_eat_until_he_is_hungry( # noqa
+        self, philosopher: Philosopher, caplog
+    ):
+
+        expected_log = f'{str(philosopher)} is full'
+
+        with caplog.at_level(logging.INFO), mock.patch(
+            'dining_philosophers.philosophers.Philosopher.eat'
+        ), mock.patch(
+            'dining_philosophers.philosophers.Philosopher.think'
+        ):
+            philosopher.run()
+
+        caplog.records
+
+        log_messages = [log.message for log in caplog.records]
+        assert expected_log in log_messages
+
     def test_eat_as_owner_of_both_forks_should_set_state_to_eat(
-        self, philosopher: Philosopher
+        self, philosopher: Philosopher, mock_sleep
     ):
         assert philosopher.state == PhilosopherState.THINKING
 
@@ -40,7 +74,7 @@ class TestPhilosophers:
         assert philosopher.state == PhilosopherState.EATING
 
     def test_eat_with_missing_ownership_of_forks_should_request_to_both_neighbors(  # noqa
-        self, philosopher: Philosopher
+        self, philosopher: Philosopher, mock_sleep
     ):
         with mock.patch("dining_philosophers.forks.Fork.request"):
             philosopher.eat()
@@ -49,7 +83,7 @@ class TestPhilosophers:
                 fork.request.assert_called_with(philosopher)
 
     def test_think_should_set_state_to_thinking_and_done_eating_with_the_forks(  # noqa
-        self, philosopher: Philosopher
+        self, philosopher: Philosopher, mock_sleep
     ):
         philosopher.state = PhilosopherState.EATING
 

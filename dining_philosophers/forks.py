@@ -9,7 +9,7 @@ from dining_philosophers.constants import ForkState
 # The Philosopher class is just imported for type hinting
 # I'm importing in that way to avoid cyclic import
 if TYPE_CHECKING:
-    from philosophers import Philosopher
+    from philosophers import Philosopher  # pragma: no cover
 
 logger = logging.getLogger(__name__)
 
