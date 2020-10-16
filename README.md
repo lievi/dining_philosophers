@@ -1,4 +1,4 @@
-## dining_philosophers
+# Dining Philosophers problem
 A little info about your project and/ or overview that explains **what** the project is about.
 
 ## Motivation
