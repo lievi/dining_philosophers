@@ -34,4 +34,4 @@ For more information about the Chandy/Misra solution, please visit the reference
 ## License
 A short snippet describing the license (MIT, Apache etc)
 
-MIT © [Lievi Silva]()
+MIT © [Lievi Silva](https://github.com/lievi/dining_philosophers/blob/master/LICENSE)
