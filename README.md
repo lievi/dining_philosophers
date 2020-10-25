@@ -13,10 +13,10 @@ Eating is not limited by the remaining amounts of food;
 
 ## Solution
 * The philosopher have a tuple of the neighbors forks
-* the fork have a current **owner**
+* The fork have a current **owner**
 * A philosopher can only eat if he is owner of both neighbors forks
-* When the philosopher wants to eat, he request the forks that he is not owner and waits until the others philosophers finish usint it.
-* When a philosopher finish eat, he change the state of the fork to dirty and send a "signal" that he is finished eat.
+* When the philosopher wants to eat, he request the forks that he is not owner and waits until the others philosophers finish using it.
+* When a philosopher finish eat, he change the state of the fork to **dirty**, and send a "signal" that he is finished eat.
 
 For more information about the Chandy/Misra solution, please visit the references links.
 
