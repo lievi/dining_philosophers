@@ -26,8 +26,12 @@ class TestPhilosophers:
         right_fork = Fork(1)
 
         philosopher = Philosopher(ID, (left_fork, right_fork))
+        with mock.patch(
+            'dining_philosophers.philosophers.threading.Thread.start'
+        ) as mock_start_thread:
+            philosopher.start()
 
-        philosopher.start()
+        mock_start_thread.assert_called_once()
 
     def test_run_philosopher_thread_with_philosopher_already_full_should_log_and_return( # noqa
         self, philosopher: Philosopher, caplog

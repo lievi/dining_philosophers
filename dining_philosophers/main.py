@@ -7,9 +7,10 @@ logging.basicConfig(
 
 
 def main():
-    dinning_table = Table()
-    dinning_table.start_dinning()
+    dining_table = Table()
+    dining_table.start_dining()
 
 
-if __name__ == "__main__":
-    main()
+def init():
+    if __name__ == "__main__":
+        main()
